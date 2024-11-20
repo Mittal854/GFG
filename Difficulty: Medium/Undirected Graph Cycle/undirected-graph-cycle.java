@@ -33,45 +33,23 @@ class GFG {
 }
 // } Driver Code Ends
 
-class Pair{
-    int n;
-    int index;
-    Pair(int n,int index)
-    {
-        this.n=n;
-        this.index=index;
-    }
-}
+
 class Solution {
-    // Function to detect cycle in an undirected graph.
     
-    public boolean isCycleUtil(int node, ArrayList<ArrayList<Integer>> adj,boolean[] vis)
+    public boolean dfs(int node,int parent,boolean[] vis,ArrayList<ArrayList<Integer>> adj)
     {
         vis[node]=true;
-        Queue<Pair> q=new LinkedList<>();
-        q.add(new Pair(node,-1));
-        while(!q.isEmpty())
+        for(int n:adj.get(node))
         {
-            Pair a=q.poll();
-            int n=a.n;
-            int index=a.index;
-            for(int b:adj.get(n))
+            if(!vis[n])
             {
-                if(!vis[b])
-                {
-                    vis[b]=true;
-                    q.add(new Pair(b,n));
-                }
-                else if(index!=b)
-                {
-                    return true;
-                }
+                if(dfs(n,node,vis,adj)) return true;
             }
+            else if(n!=parent) return true;
         }
         return false;
-        
     }
-    
+    // Function to detect cycle in an undirected graph.
     public boolean isCycle(ArrayList<ArrayList<Integer>> adj) {
         // Code here
         int n=adj.size();
@@ -80,7 +58,7 @@ class Solution {
         {
             if(!vis[i])
             {
-                if(isCycleUtil(i,adj,vis)) return true;
+                if(dfs(i,-1,vis,adj)) return true;
             }
         }
         return false;
