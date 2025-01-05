@@ -10,9 +10,8 @@ class Main {
 
         while (t-- > 0) {
             ArrayList<ArrayList<Integer>> adj = new ArrayList<>();
-            String st[] = read.readLine().trim().split("\\s+");
-            int edges = Integer.parseInt(st[0]);
-            int vertices = Integer.parseInt(st[1]);
+            int vertices = Integer.parseInt(read.readLine());
+            int edges = Integer.parseInt(read.readLine());
 
             for (int i = 0; i < vertices; i++) adj.add(i, new ArrayList<Integer>());
 
@@ -57,39 +56,33 @@ class Main {
 
 class Solution {
     // Function to return list containing vertices in Topological order.
-    
-    static void dfs(int node,ArrayList<ArrayList<Integer>> adj,boolean[] visited,Stack<Integer> st )
-    {
-        visited[node]=true;
-        for(int i:adj.get(node))
-        {
-            if(!visited[i])
-            {
-                dfs(i,adj,visited,st);
-            }
-        }
-        st.push(node);
-    }
-    
     static ArrayList<Integer> topologicalSort(ArrayList<ArrayList<Integer>> adj) {
         // Your code here
         int n=adj.size();
-        boolean[] visited=new boolean[n];
-        Stack<Integer> st=new Stack<>();
+        int[] indegree=new int[n];
         for(int i=0;i<n;i++)
         {
-            if(!visited[i])
+            for(int j:adj.get(i))
             {
-                dfs(i,adj,visited,st);
+                indegree[j]++;
             }
         }
-        ArrayList<Integer> ans=new ArrayList<>();
-        while(!st.isEmpty())
+        Queue<Integer>q=new LinkedList<>();
+        ArrayList<Integer>topo=new ArrayList<>();
+        for(int i=0;i<n;i++)
         {
-            int a=st.pop();
-            ans.add(a);
+            if(indegree[i]==0) q.add(i);
         }
-        return ans;
-        
+        while(!q.isEmpty())
+        {
+            int node=q.poll();
+            topo.add(node);
+            for(int j:adj.get(node))
+            {
+                indegree[j]--;
+                if(indegree[j]==0) q.add(j);
+            }
+        }
+        return topo;
     }
 }
