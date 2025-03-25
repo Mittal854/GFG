@@ -43,41 +43,17 @@ class GFG {
 // User function Template for Java
 
 class Solution {
-    public static void heapify(int i,int n,int[] arr)
-    {
-        int largest=i;
-        int left=2*i+1;
-        int right=2*i+2;
-        if(left<n && arr[left]>arr[largest])
-        {
-            largest=left;
-        }
-        if(right<n && arr[right]>arr[largest])
-        {
-            largest=right;
-        }
-        if(largest!=i)
-        {
-            int temp=arr[largest];
-            arr[largest]=arr[i];
-            arr[i]=temp;
-            heapify(largest,n,arr);
-        }
-    }
     public static int kthSmallest(int[] arr, int k) {
         // Your code here
-        int n=arr.length;
-        for(int i=n/2;i>=0;i--)
+        PriorityQueue<Integer>pq=new PriorityQueue<>((a,b)->Integer.compare(b,a));
+        for(int i:arr)
         {
-            heapify(i,n,arr);
+            pq.add(i);
+            if(pq.size()>k)
+            {
+                pq.poll();
+            }
         }
-        for(int i=n-1;i>0;i--)
-        {
-            int temp=arr[i];
-            arr[i]=arr[0];
-            arr[0]=temp;
-            heapify(0,i,arr);
-        }
-        return arr[k-1];
+        return pq.peek();
     }
 }
